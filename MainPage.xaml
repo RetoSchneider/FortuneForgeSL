@@ -17,13 +17,14 @@
         <VerticalStackLayout Spacing="15" Padding="20" VerticalOptions="Start">
             <!-- App Header -->
             <Label Text="Fortune Forge"
-               Style="{StaticResource HeaderLabelStyle}"
-               TextColor="{StaticResource PrimaryColor}"
-               Margin="0,0,0,0"/>
+                   Style="{StaticResource HeaderLabelStyle}"
+                   TextColor="{StaticResource EntryTextColor}"
+                   Margin="0,0,0,0"/>
 
             <Label Text="Swiss Lotto Edition"
                    Style="{StaticResource HeaderLabelStyle}"
-                   TextColor="{StaticResource PrimaryColor}"
+                   TextColor="{StaticResource EntryTextColor}"
+                   FontSize="Medium"
                    Margin="0,0,0,10"/>
 
             <!-- Main Number Inputs -->
@@ -33,7 +34,7 @@
                            Style="{StaticResource SubHeaderLabelStyle}"/>
                     <Entry x:Name="IgnoredMainNumbersEntry"
                            Style="{StaticResource EntryStyle}"
-                           Placeholder="e.g. 5, 17, 40, 33, 2, 12"/>
+                           Text="{Binding IgnoredMainNumbersText}"/>
                 </VerticalStackLayout>
             </Frame>
 
@@ -44,7 +45,7 @@
                            Style="{StaticResource SubHeaderLabelStyle}"/>
                     <Entry x:Name="IgnoredAdditionalNumbersEntry"
                            Style="{StaticResource EntryStyle}"
-                           Placeholder="e.g. 3"/>
+                           Text="{Binding IgnoredAdditionalNumbersText}"/>
                 </VerticalStackLayout>
             </Frame>
 
@@ -56,18 +57,26 @@
 
             <!-- Adjusted Combinations List -->
             <Label Text="Generated Combinations:"
-                   Style="{StaticResource SubHeaderLabelStyle}"/>
-            <CollectionView x:Name="CombinationsCollectionView"
-                            Style="{StaticResource CollectionViewStyle}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame CornerRadius="8" Padding="10" Margin="5" BackgroundColor="#f0f0f0">
-                            <Label Text="{Binding .}"
-                                   LineBreakMode="NoWrap"/>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                   Style="{StaticResource SubHeaderLabelStyle}"
+                   Margin="5,10,0,0"/>
+
+            <Frame CornerRadius="15" Padding="0" Margin="5" BackgroundColor="White">
+                <!-- Frame with rounded corners -->
+                <CollectionView x:Name="CombinationsCollectionView"
+                                Style="{StaticResource CollectionViewStyle}"
+                                ItemsSource="{Binding GeneratedCombinations}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame CornerRadius="8" Padding="10" Margin="5" BackgroundColor="White">
+                                <Label Text="{Binding .}"
+                                       TextColor="Black"
+                                       FontAttributes="Bold"
+                                       LineBreakMode="NoWrap"/>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Frame>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

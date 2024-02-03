@@ -8,7 +8,7 @@
     <Style x:Key="HeaderLabelStyle" TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource TextColor}"/>
         <Setter Property="FontAttributes" Value="Bold"/>
-        <Setter Property="FontSize" Value="26"/>
+        <Setter Property="FontSize" Value="32"/>
         <Setter Property="HorizontalOptions" Value="Center"/>
     </Style>
 
@@ -25,7 +25,6 @@
         <Setter Property="FontSize" Value="Small"/>
         <Setter Property="BackgroundColor" Value="{StaticResource FrameBackgroundColor}"/>
         <Setter Property="Margin" Value="0,0,0,8"/>
-        <!-- Remove VisualStateManager if not used -->
     </Style>
 
     <!-- Button Styles -->
@@ -47,8 +46,8 @@
 
     <!-- CollectionView Styles -->
     <Style x:Key="CollectionViewStyle" TargetType="CollectionView">
-        <Setter Property="BackgroundColor" Value="{StaticResource FrameBackgroundColor}"/>
-        <Setter Property="HeightRequest" Value="250"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ButtonBackgroundColor}"/>
+        <Setter Property="HeightRequest" Value="450"/>
     </Style>
 
 </ResourceDictionary>
