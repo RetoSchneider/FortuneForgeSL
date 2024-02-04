@@ -53,8 +53,10 @@ namespace FortuneForgeSL
 
         private void OnGenerateClicked()
         {
-            var ignoredMainNumbers = new List<int> { 5, 17, 40, 33, 2, 12, 42, 3, 4, 8 };
-            var ignoredAdditionalNumbers = new List<int> { 5, 2, 3 };
+            var ignoredMainNumbers = ParseInputNumbers(IgnoredMainNumbersText);
+
+            var ignoredAdditionalNumbers = ParseInputNumbers(IgnoredAdditionalNumbersText);
+
             var sumRanges = new Dictionary<(int, int), (int, int)>
             {
                 { (2, 2), (97, 105) },
@@ -76,6 +78,17 @@ namespace FortuneForgeSL
                 GeneratedCombinations.Add(combo);
             }
         }
+        private List<int> ParseInputNumbers(string? inputText)
+        {
+            if (string.IsNullOrWhiteSpace(inputText))
+                return new List<int>();
+
+            return inputText.Split(',')
+                            .Select(part => part.Trim())
+                            .Where(part => int.TryParse(part, out _))
+                            .Select(int.Parse)
+                            .ToList();
+        }
 
         public class SwissLotto
         {
@@ -96,7 +109,7 @@ namespace FortuneForgeSL
 
                         var sumRange = sumRanges[key];
 
-                        for (int _ = 0; _ < 100000; _++)
+                        for (int _ = 0; _ < 200000; _++)
                         {
                             var mainNumbers = mainNumberRange.OrderBy(x => random.Next()).Take(6).OrderBy(x => x).ToList();
                             var additionalNumber = additionalNumberRange[random.Next(additionalNumberRange.Count)];
