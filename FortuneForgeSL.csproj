@@ -55,6 +55,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiFont Remove="Resources\Fonts\resize-icon.jpg" />
+	  <MauiFont Remove="Resources\Fonts\resize-icon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiImage Remove="Resources\Images\window_resize_image.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Resources\Images\window_resize_image.jpg">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
@@ -63,7 +78,6 @@
 	<ItemGroup>
 	  <Folder Include="Resources\AppIcon\" />
 	  <Folder Include="Resources\Fonts\" />
-	  <Folder Include="Resources\Images\" />
 	</ItemGroup>
 
 </Project>

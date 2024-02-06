@@ -13,70 +13,85 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView>
-        <VerticalStackLayout Spacing="15" Padding="20" VerticalOptions="Start">
-            <!-- App Header -->
-            <Label Text="Fortune Forge"
+    <Grid>
+        <!-- ImageButton positioned at the top-right -->
+        <ImageButton 
+                     Command="{Binding ResetWindowSizeCommand}"
+                     Source="window_resize_image.jpg"
+                     HorizontalOptions="End"
+                     VerticalOptions="Start"
+                     HeightRequest="32"
+                     WidthRequest="32"
+                     CornerRadius="16"
+                     Margin="0,10,10,0"
+                     ZIndex="1"
+                     ToolTipProperties.Text="Reset window size"/>
+
+        <ScrollView>
+            <VerticalStackLayout Spacing="15" Padding="20" VerticalOptions="Start">
+                <!-- App Header -->
+                <Label Text="Fortune Forge"
                    Style="{StaticResource HeaderLabelStyle}"
                    TextColor="{StaticResource EntryTextColor}"
                    Margin="0,0,0,0"/>
 
-            <Label Text="Swiss Lotto Edition"
+                <Label Text="Swiss Lotto Edition"
                    Style="{StaticResource HeaderLabelStyle}"
                    TextColor="{StaticResource EntryTextColor}"
                    FontSize="Medium"
                    Margin="0,0,0,10"/>
 
-            <!-- Main Number Inputs -->
-            <Frame Style="{StaticResource FrameStyle}">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Ignore Main numbers:"
+                <!-- Main Number Inputs -->
+                <Frame Style="{StaticResource FrameStyle}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Ignore Main numbers:"
                            Style="{StaticResource SubHeaderLabelStyle}"/>
-                    <Entry x:Name="IgnoredMainNumbersEntry"
+                        <Entry x:Name="IgnoredMainNumbersEntry"
                            Style="{StaticResource EntryStyle}"
                            Text="{Binding IgnoredMainNumbersText}"/>
-                </VerticalStackLayout>
-            </Frame>
+                    </VerticalStackLayout>
+                </Frame>
 
-            <!-- Additional Number Inputs -->
-            <Frame Style="{StaticResource FrameStyle}">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Ignored Additional Numbers (comma separated):"
+                <!-- Additional Number Inputs -->
+                <Frame Style="{StaticResource FrameStyle}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Ignored Additional Numbers (comma separated):"
                            Style="{StaticResource SubHeaderLabelStyle}"/>
-                    <Entry x:Name="IgnoredAdditionalNumbersEntry"
+                        <Entry x:Name="IgnoredAdditionalNumbersEntry"
                            Style="{StaticResource EntryStyle}"
                            Text="{Binding IgnoredAdditionalNumbersText}"/>
-                </VerticalStackLayout>
-            </Frame>
+                    </VerticalStackLayout>
+                </Frame>
 
-            <!-- Generate Button -->
-            <Button x:Name="GenerateButton"
+                <!-- Generate Button -->
+                <Button x:Name="GenerateButton"
                     Text="Generate Combinations"
                     Style="{StaticResource ButtonStyle}"
                     Command="{Binding GenerateCommand}"/>
 
-            <!-- Adjusted Combinations List -->
-            <Label Text="Generated Combinations:"
+                <!-- Adjusted Combinations List -->
+                <Label Text="Generated Combinations:"
                    Style="{StaticResource SubHeaderLabelStyle}"
                    Margin="5,10,0,0"/>
 
-            <Frame CornerRadius="15" Padding="0" Margin="5" BackgroundColor="White">
-                <!-- Frame with rounded corners -->
-                <CollectionView x:Name="CombinationsCollectionView"
+                <Frame CornerRadius="15" Padding="0" Margin="2">
+                    <!-- Frame with rounded corners -->
+                    <CollectionView x:Name="CombinationsCollectionView"
                                 Style="{StaticResource CollectionViewStyle}"
                                 ItemsSource="{Binding GeneratedCombinations}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Frame CornerRadius="8" Padding="10" Margin="5" BackgroundColor="White">
-                                <Label Text="{Binding .}"
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame CornerRadius="8" Padding="11, 10, 10, 11" Margin="5" BackgroundColor="White">
+                                    <Label Text="{Binding .}"
                                        TextColor="Black"
                                        FontAttributes="Bold"
-                                       LineBreakMode="NoWrap"/>
-                            </Frame>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </Frame>
-        </VerticalStackLayout>
-    </ScrollView>
+                                       LineBreakMode="WordWrap"/>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

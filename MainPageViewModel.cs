@@ -8,12 +8,14 @@ namespace FortuneForgeSL
     public class MainPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
+
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private string? _ignoredMainNumbersText;
+
         public string? IgnoredMainNumbersText
         {
             get => _ignoredMainNumbersText;
@@ -28,6 +30,7 @@ namespace FortuneForgeSL
         }
 
         private string? _ignoredAdditionalNumbersText;
+
         public string? IgnoredAdditionalNumbersText
         {
             get => _ignoredAdditionalNumbersText;
@@ -42,13 +45,28 @@ namespace FortuneForgeSL
         }
 
         public ObservableCollection<string> GeneratedCombinations { get; private set; } = new ObservableCollection<string>();
+
         public ICommand GenerateCommand { get; private set; }
+
+        public ICommand ResetWindowSizeCommand { get; private set; }
 
         private SwissLotto swissLotto = new SwissLotto();
 
         public MainPageViewModel()
         {
             GenerateCommand = new Command(OnGenerateClicked);
+            ResetWindowSizeCommand = new Command(ResetWindowSize);
+        }
+        private void ResetWindowSize()
+        {
+            var currentWindow = Application.Current?.Windows.FirstOrDefault();
+            if (currentWindow != null)
+            {
+                const int originalWidth = 525;
+                const int originalHeight = 1040;
+                currentWindow.Width = originalWidth;
+                currentWindow.Height = originalHeight;
+            }
         }
 
         private void OnGenerateClicked()
@@ -78,6 +96,7 @@ namespace FortuneForgeSL
                 GeneratedCombinations.Add(combo);
             }
         }
+
         private List<int> ParseInputNumbers(string? inputText)
         {
             if (string.IsNullOrWhiteSpace(inputText))

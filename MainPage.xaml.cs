@@ -7,5 +7,10 @@
             InitializeComponent();
             BindingContext = new MainPageViewModel();
         }
+
+        private void ImageButton_Clicked(object sender, EventArgs e)
+        {
+
+        }
     }
 }
