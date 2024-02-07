@@ -29,26 +29,33 @@
 
         <ScrollView>
             <VerticalStackLayout Spacing="15" Padding="20" VerticalOptions="Start">
-                <!-- App Header -->
-                <Label Text="Fortune Forge"
-                   Style="{StaticResource HeaderLabelStyle}"
-                   TextColor="{StaticResource EntryTextColor}"
-                   Margin="0,0,0,0"/>
 
-                <Label Text="Swiss Lotto Edition"
-                   Style="{StaticResource HeaderLabelStyle}"
-                   TextColor="{StaticResource EntryTextColor}"
-                   FontSize="Medium"
-                   Margin="0,0,0,10"/>
+                <!-- Red Frame for App Header and Swiss Lotto Edition -->
+                <Frame Style="{StaticResource CollectionViewStyle}" HeightRequest="80" WidthRequest="350" Padding="10" CornerRadius="10" HorizontalOptions="FillAndExpand" Margin="20,20,20,10">
+                    <VerticalStackLayout>
+                        <!-- App Header -->
+                        <Label Text="Fortune Forge"
+                               TextColor="White"
+                               FontSize="30"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center" />
+
+                        <!-- Edition Label -->
+                        <Label Text="Swiss Lotto Edition"
+                               TextColor="White"
+                               FontSize="16"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
 
                 <!-- Main Number Inputs -->
                 <Frame Style="{StaticResource FrameStyle}">
                     <VerticalStackLayout Spacing="10">
                         <Label Text="Ignore Main numbers:"
-                           Style="{StaticResource SubHeaderLabelStyle}"/>
+                               Style="{StaticResource SubHeaderLabelStyle}"/>
                         <Entry x:Name="IgnoredMainNumbersEntry"
-                           Style="{StaticResource EntryStyle}"
-                           Text="{Binding IgnoredMainNumbersText}"/>
+                               Style="{StaticResource EntryStyle}"
+                               Text="{Binding IgnoredMainNumbersText}"/>
                     </VerticalStackLayout>
                 </Frame>
 
@@ -56,36 +63,95 @@
                 <Frame Style="{StaticResource FrameStyle}">
                     <VerticalStackLayout Spacing="10">
                         <Label Text="Ignored Additional Numbers (comma separated):"
-                           Style="{StaticResource SubHeaderLabelStyle}"/>
+                               Style="{StaticResource SubHeaderLabelStyle}"/>
                         <Entry x:Name="IgnoredAdditionalNumbersEntry"
-                           Style="{StaticResource EntryStyle}"
-                           Text="{Binding IgnoredAdditionalNumbersText}"/>
+                               Style="{StaticResource EntryStyle}"
+                               Text="{Binding IgnoredAdditionalNumbersText}"/>
                     </VerticalStackLayout>
                 </Frame>
 
                 <!-- Generate Button -->
                 <Button x:Name="GenerateButton"
-                    Text="Generate Combinations"
-                    Style="{StaticResource ButtonStyle}"
-                    Command="{Binding GenerateCommand}"/>
+                        Text="Generate Combinations"
+                        Style="{StaticResource ButtonStyle}"
+                        Command="{Binding GenerateCommand}"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"/>
 
-                <!-- Adjusted Combinations List -->
-                <Label Text="Generated Combinations:"
-                   Style="{StaticResource SubHeaderLabelStyle}"
-                   Margin="5,10,0,0"/>
+                <!-- Label and Frame Switch Buttons Container -->
+                <Grid Margin="5,10,02,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <Frame CornerRadius="15" Padding="0" Margin="2">
+                    <!-- Adjusted Combinations Label -->
+                    <Label Text="Generated Combinations:"
+                           Style="{StaticResource SubHeaderLabelStyle}"
+                           Grid.Column="0"
+                           VerticalOptions="Center"
+                           Margin="0,0,0,0"/>
+
+                    <!-- Buttons for switching between frames -->
+                    <Button Text="1" Command="{Binding ShowInitialCommand}" Style="{StaticResource ButtonStyle}" Grid.Column="1" Margin="0,0,0,0" CornerRadius="18" HeightRequest="36" WidthRequest="36" HorizontalOptions="Start"/>
+                    <Button Text="2" Command="{Binding ShowFirstAdjustmentCommand}" Style="{StaticResource ButtonStyle}" Grid.Column="2" Margin="40,0,0,0" CornerRadius="18" HeightRequest="36" WidthRequest="36"/>
+                    <Button Text="3" Command="{Binding ShowSecondAdjustmentCommand}" Style="{StaticResource ButtonStyle}" Grid.Column="3" Margin="35,0,0,0" CornerRadius="18" HeightRequest="36" WidthRequest="36"/>
+                </Grid>
+
+                <!-- Frame for initial combinations -->
+                <Frame x:Name="InitialFrame" IsVisible="{Binding IsInitialVisible}" CornerRadius="15" Padding="0" Margin="2">
                     <!-- Frame with rounded corners -->
-                    <CollectionView x:Name="CombinationsCollectionView"
-                                Style="{StaticResource CollectionViewStyle}"
-                                ItemsSource="{Binding GeneratedCombinations}">
+                    <CollectionView x:Name="InitialCombinationsCollectionView"
+                                    Style="{StaticResource CollectionViewStyle}"
+                                    ItemsSource="{Binding InitialCombinations}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Frame CornerRadius="8" Padding="11, 10, 10, 11" Margin="5" BackgroundColor="White">
                                     <Label Text="{Binding .}"
-                                       TextColor="Black"
-                                       FontAttributes="Bold"
-                                       LineBreakMode="WordWrap"/>
+                                           TextColor="Black"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="WordWrap"/>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Frame>
+
+                <!-- Frame for first adjustment combinations -->
+                <Frame x:Name="FirstAdjustmentFrame" IsVisible="{Binding IsFirstAdjustmentVisible}" CornerRadius="15" Padding="0" Margin="2">
+                    <!-- Frame with rounded corners -->
+                    <CollectionView x:Name="FirstAdjustmentCombinationsCollectionView"
+                                    Style="{StaticResource CollectionViewStyle}"
+                                    ItemsSource="{Binding FirstAdjustmentCombinations}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame CornerRadius="8" Padding="11, 10, 10, 11" Margin="5" BackgroundColor="White">
+                                    <Label Text="{Binding .}"
+                                           TextColor="Black"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="WordWrap"/>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Frame>
+
+                <!-- Frame for second adjustment combinations -->
+                <Frame x:Name="SecondAdjustmentFrame" IsVisible="{Binding IsSecondAdjustmentVisible}" CornerRadius="15" Padding="0" Margin="2">
+                    <!-- Frame with rounded corners -->
+                    <CollectionView x:Name="SecondAdjustmentCombinationsCollectionView"
+                                    Style="{StaticResource CollectionViewStyle}"
+                                    ItemsSource="{Binding SecondAdjustmentCombinations}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame CornerRadius="8" Padding="11, 10, 10, 11" Margin="5" BackgroundColor="White">
+                                    <Label Text="{Binding .}"
+                                           TextColor="Black"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="WordWrap"/>
                                 </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>

@@ -13,7 +13,7 @@
             var window = base.CreateWindow(activationState);
 
             const int newWidth = 525;
-            const int newHeight = 1040;
+            const int newHeight = 1055;
 
             window.Width = newWidth;
             window.Height = newHeight;

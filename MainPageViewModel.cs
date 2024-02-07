@@ -1,7 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using Microsoft.Maui.Controls;
 
 namespace FortuneForgeSL
 {
@@ -20,7 +23,7 @@ namespace FortuneForgeSL
         {
             get => _ignoredMainNumbersText;
             set
-            {
+             {
                 if (_ignoredMainNumbersText != value)
                 {
                     _ignoredMainNumbersText = value;
@@ -44,11 +47,27 @@ namespace FortuneForgeSL
             }
         }
 
-        public ObservableCollection<string> GeneratedCombinations { get; private set; } = new ObservableCollection<string>();
+        public bool IsInitialVisible { get; set; } = true;
+
+        public bool IsFirstAdjustmentVisible { get; set; } = false;
+
+        public bool IsSecondAdjustmentVisible { get; set; } = false;
+
+        public ObservableCollection<string> InitialCombinations { get; } = new ObservableCollection<string>();
+
+        public ObservableCollection<string> FirstAdjustmentCombinations { get; } = new ObservableCollection<string>();
+
+        public ObservableCollection<string> SecondAdjustmentCombinations { get; } = new ObservableCollection<string>();
 
         public ICommand GenerateCommand { get; private set; }
 
         public ICommand ResetWindowSizeCommand { get; private set; }
+
+        public ICommand ShowInitialCommand { get; private set; }
+
+        public ICommand ShowFirstAdjustmentCommand { get; private set; }
+
+        public ICommand ShowSecondAdjustmentCommand { get; private set; }
 
         private SwissLotto swissLotto = new SwissLotto();
 
@@ -56,14 +75,18 @@ namespace FortuneForgeSL
         {
             GenerateCommand = new Command(OnGenerateClicked);
             ResetWindowSizeCommand = new Command(ResetWindowSize);
+            ShowInitialCommand = new Command(() => ShowFrame("Initial"));
+            ShowFirstAdjustmentCommand = new Command(() => ShowFrame("FirstAdjustment"));
+            ShowSecondAdjustmentCommand = new Command(() => ShowFrame("SecondAdjustment"));
         }
+
         private void ResetWindowSize()
         {
             var currentWindow = Application.Current?.Windows.FirstOrDefault();
             if (currentWindow != null)
             {
                 const int originalWidth = 525;
-                const int originalHeight = 1040;
+                const int originalHeight = 1055;
                 currentWindow.Width = originalWidth;
                 currentWindow.Height = originalHeight;
             }
@@ -72,7 +95,6 @@ namespace FortuneForgeSL
         private void OnGenerateClicked()
         {
             var ignoredMainNumbers = ParseInputNumbers(IgnoredMainNumbersText);
-
             var ignoredAdditionalNumbers = ParseInputNumbers(IgnoredAdditionalNumbersText);
 
             var sumRanges = new Dictionary<(int, int), (int, int)>
@@ -88,13 +110,45 @@ namespace FortuneForgeSL
                 { (4, 4), (116, 125) },
             };
 
-            var finalCombinations = swissLotto.GenerateAndAdjustCombinations(ignoredMainNumbers, ignoredAdditionalNumbers, sumRanges);
+            var result = swissLotto.GenerateAndAdjustCombinations(ignoredMainNumbers, ignoredAdditionalNumbers, sumRanges);
+            var initial = result.Item1;
+            var firstAdjustment = result.Item2;
+            var secondAdjustment = result.Item3;
 
-            GeneratedCombinations.Clear();
-            foreach (var combo in finalCombinations)
+            InitialCombinations.Clear();
+            FirstAdjustmentCombinations.Clear();
+            SecondAdjustmentCombinations.Clear();
+
+            foreach (var combo in initial)
+                InitialCombinations.Add(combo);
+            foreach (var combo in firstAdjustment)
+                FirstAdjustmentCombinations.Add(combo);
+            foreach (var combo in secondAdjustment)
+                SecondAdjustmentCombinations.Add(combo);
+        }
+
+        private void ShowFrame(string frame)
+        {
+            IsInitialVisible = false;
+            IsFirstAdjustmentVisible = false;
+            IsSecondAdjustmentVisible = false;
+
+            switch (frame)
             {
-                GeneratedCombinations.Add(combo);
+                case "Initial":
+                    IsInitialVisible = true;
+                    break;
+                case "FirstAdjustment":
+                    IsFirstAdjustmentVisible = true;
+                    break;
+                case "SecondAdjustment":
+                    IsSecondAdjustmentVisible = true;
+                    break;
             }
+
+            OnPropertyChanged(nameof(IsInitialVisible));
+            OnPropertyChanged(nameof(IsFirstAdjustmentVisible));
+            OnPropertyChanged(nameof(IsSecondAdjustmentVisible));
         }
 
         private List<int> ParseInputNumbers(string? inputText)
@@ -169,38 +223,18 @@ namespace FortuneForgeSL
                 foreach (var line in input_data)
                 {
                     var parts = line.Split(", Additional Number: ");
-                    if (parts.Length != 2) continue;
-
                     var mainNumbersStr = parts[0].Replace("Main Numbers: [", "").Replace("]", "");
                     var mainNumbersParts = mainNumbersStr.Split(", ");
-                    var mainNumbers = new List<int>();
-                    foreach (var numStr in mainNumbersParts)
-                    {
-                        if (int.TryParse(numStr, out int num))
-                        {
-                            mainNumbers.Add(num);
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-
-                    if (mainNumbers.Count != 6)
-                    {
-                        continue;
-                    }
-
-                    if (!int.TryParse(parts[1], out int additionalNumber))
-                    {
-                        continue;
-                    }
+                    var mainNumbers = mainNumbersParts.Select(part => int.Parse(part.Trim())).ToList();
+                    var additionalNumber = int.Parse(parts[1].Trim());
 
                     var uniqueAdjustedFound = false;
                     while (!uniqueAdjustedFound)
                     {
+                        // Choose one number to remain the same
                         var remainSameIndex = random.Next(mainNumbers.Count);
 
+                        // Create adjusted main numbers
                         var adjustedMainNumbers = new List<int>(mainNumbers);
                         for (int i = 0; i < mainNumbers.Count; i++)
                         {
@@ -208,17 +242,18 @@ namespace FortuneForgeSL
                                 continue;
 
                             var num = mainNumbers[i];
-                            var adjustment = random.Next(2) * 2 - 1;
+                            var adjustment = random.Next(2) * 2 - 1; // Randomly decide to adjust by +1 or -1
                             var adjustedNum = num + adjustment;
 
+                            // Check bounds and uniqueness within the adjusted combination
                             if (adjustedNum < 1 || adjustedNum > 42 || adjustedMainNumbers.Contains(adjustedNum))
                             {
-                                adjustedNum = num - adjustment;
+                                adjustedNum = num - adjustment; // Try the opposite adjustment
                             }
 
                             if (adjustedNum < 1 || adjustedNum > 42 || adjustedMainNumbers.Contains(adjustedNum))
                             {
-                                adjustedNum = num;
+                                adjustedNum = num; // If opposite adjustment is also invalid, leave the number as is
                             }
 
                             adjustedMainNumbers[i] = adjustedNum;
@@ -227,7 +262,7 @@ namespace FortuneForgeSL
                         var sortedAdjustedNumbers = adjustedMainNumbers.OrderBy(x => x).ToList();
                         if (!excludeCombinations.Any(ec => ec.SequenceEqual(sortedAdjustedNumbers)))
                         {
-                            adjustedCombinations.Add($"Main Numbers: {string.Join(", ", sortedAdjustedNumbers)}, Additional Number: {additionalNumber}");
+                            adjustedCombinations.Add($"Main Numbers: [{string.Join(", ", sortedAdjustedNumbers)}], Additional Number: {additionalNumber}");
                             excludeCombinations.Add(sortedAdjustedNumbers);
                             uniqueAdjustedFound = true;
                         }
@@ -237,21 +272,23 @@ namespace FortuneForgeSL
                 return adjustedCombinations;
             }
 
-            public List<string> GenerateAndAdjustCombinations(List<int> ignoredMainNumbers, List<int> ignoredAdditionalNumbers, Dictionary<(int, int), (int, int)> sumRanges)
+            public (List<string>, List<string>, List<string>) GenerateAndAdjustCombinations(List<int> ignoredMainNumbers, List<int> ignoredAdditionalNumbers, Dictionary<(int, int), (int, int)> sumRanges)
             {
                 var initialCombinations = GenerateSwissLottoCombinations(ignoredMainNumbers, ignoredAdditionalNumbers, sumRanges);
 
-                var formattedCombinations = initialCombinations.Select(combo => $"Main Numbers: {string.Join(", ", combo.Item1)}, Additional Number: {combo.Item2}").ToList();
+                var formattedCombinations = initialCombinations.Select(combo => $"Main Numbers: [{string.Join(", ", combo.Item1)}], Additional Number: {combo.Item2}").ToList();
 
                 var firstAdjustment = AdjustNumbersFromTextInput(formattedCombinations);
 
-                var firstAdjustmentMainNumbers = firstAdjustment.Select(combo => combo.Split(", Additional Number: ")[0].Replace("Main Numbers: ", "").Trim()).Select(mainNumbers => mainNumbers.Trim('[', ']').Split(", ").Select(int.Parse).ToList()).ToList();
+                // Convert the formatted first adjustment back to lists of integers for exclusion
+                var firstAdjustmentMainNumbers = firstAdjustment
+                    .Select(combo => combo.Split(", Additional Number: ")[0].Replace("Main Numbers: [", "").Replace("]", "").Trim())
+                    .Select(mainNumbers => mainNumbers.Split(", ").Select(int.Parse).ToList())
+                    .ToList();
 
                 var secondAdjustment = AdjustNumbersFromTextInput(formattedCombinations, firstAdjustmentMainNumbers);
 
-                var allCombinations = formattedCombinations.Concat(firstAdjustment).Concat(secondAdjustment).ToList();
-
-                return allCombinations;
+                return (formattedCombinations, firstAdjustment, secondAdjustment);
             }
         }
     }
