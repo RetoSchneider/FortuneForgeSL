@@ -18,12 +18,11 @@ namespace FortuneForgeSL
         }
 
         private string? _ignoredMainNumbersText;
-
         public string? IgnoredMainNumbersText
         {
             get => _ignoredMainNumbersText;
             set
-             {
+            {
                 if (_ignoredMainNumbersText != value)
                 {
                     _ignoredMainNumbersText = value;
@@ -47,11 +46,99 @@ namespace FortuneForgeSL
             }
         }
 
-        public bool IsInitialVisible { get; set; } = true;
+        private bool _isInitialVisible = true;
 
-        public bool IsFirstAdjustmentVisible { get; set; } = false;
+        public bool IsInitialVisible
+        {
+            get => _isInitialVisible;
+            set
+            {
+                if (_isInitialVisible != value)
+                {
+                    _isInitialVisible = value;
+                    OnPropertyChanged();
+                    UpdateFrameVisibility();
+                }
+            }
+        }
 
-        public bool IsSecondAdjustmentVisible { get; set; } = false;
+        private bool _isFirstAdjustmentVisible = false;
+
+        public bool IsFirstAdjustmentVisible
+        {
+            get => _isFirstAdjustmentVisible;
+            set
+            {
+                if (_isFirstAdjustmentVisible != value)
+                {
+                    _isFirstAdjustmentVisible = value;
+                    OnPropertyChanged();
+                    // Update related properties
+                    UpdateFrameVisibility();
+                }
+            }
+        }
+
+        private bool _isSecondAdjustmentVisible = false;
+
+        public bool IsSecondAdjustmentVisible
+        {
+            get => _isSecondAdjustmentVisible;
+            set
+            {
+                if (_isSecondAdjustmentVisible != value)
+                {
+                    _isSecondAdjustmentVisible = value;
+                    OnPropertyChanged();
+                    UpdateFrameVisibility();
+                }
+            }
+        }
+
+        private bool _isInitialButtonActive;
+
+        public bool IsInitialButtonActive
+        {
+            get => _isInitialButtonActive;
+            set
+            {
+                if (_isInitialButtonActive != value)
+                {
+                    _isInitialButtonActive = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _isFirstAdjustmentButtonActive;
+
+        public bool IsFirstAdjustmentButtonActive
+        {
+            get => _isFirstAdjustmentButtonActive;
+            set
+            {
+                if (_isFirstAdjustmentButtonActive != value)
+                {
+                    _isFirstAdjustmentButtonActive = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _isSecondAdjustmentButtonActive;
+
+        public bool IsSecondAdjustmentButtonActive
+        {
+            get => _isSecondAdjustmentButtonActive;
+            set
+            {
+                if (_isSecondAdjustmentButtonActive != value)
+                {
+                    _isSecondAdjustmentButtonActive = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public ObservableCollection<string> InitialCombinations { get; } = new ObservableCollection<string>();
 
@@ -80,13 +167,20 @@ namespace FortuneForgeSL
             ShowSecondAdjustmentCommand = new Command(() => ShowFrame("SecondAdjustment"));
         }
 
+        private void UpdateFrameVisibility()
+        {
+            IsInitialButtonActive = IsInitialVisible;
+            IsFirstAdjustmentButtonActive = IsFirstAdjustmentVisible;
+            IsSecondAdjustmentButtonActive = IsSecondAdjustmentVisible;
+        }
+
         private void ResetWindowSize()
         {
             var currentWindow = Application.Current?.Windows.FirstOrDefault();
             if (currentWindow != null)
             {
                 const int originalWidth = 525;
-                const int originalHeight = 1055;
+                const int originalHeight = 1010;
                 currentWindow.Width = originalWidth;
                 currentWindow.Height = originalHeight;
             }
@@ -109,7 +203,6 @@ namespace FortuneForgeSL
                 { (4, 3), (106, 115) },
                 { (4, 4), (116, 125) },
             };
-
             var result = swissLotto.GenerateAndAdjustCombinations(ignoredMainNumbers, ignoredAdditionalNumbers, sumRanges);
             var initial = result.Item1;
             var firstAdjustment = result.Item2;
@@ -125,6 +218,12 @@ namespace FortuneForgeSL
                 FirstAdjustmentCombinations.Add(combo);
             foreach (var combo in secondAdjustment)
                 SecondAdjustmentCombinations.Add(combo);
+
+            IsInitialButtonActive = true;
+            IsFirstAdjustmentButtonActive = false;
+            IsSecondAdjustmentButtonActive = false;
+
+            ShowFrame("Initial");
         }
 
         private void ShowFrame(string frame)
@@ -231,10 +330,8 @@ namespace FortuneForgeSL
                     var uniqueAdjustedFound = false;
                     while (!uniqueAdjustedFound)
                     {
-                        // Choose one number to remain the same
                         var remainSameIndex = random.Next(mainNumbers.Count);
 
-                        // Create adjusted main numbers
                         var adjustedMainNumbers = new List<int>(mainNumbers);
                         for (int i = 0; i < mainNumbers.Count; i++)
                         {
@@ -242,18 +339,17 @@ namespace FortuneForgeSL
                                 continue;
 
                             var num = mainNumbers[i];
-                            var adjustment = random.Next(2) * 2 - 1; // Randomly decide to adjust by +1 or -1
+                            var adjustment = random.Next(2) * 2 - 1;
                             var adjustedNum = num + adjustment;
 
-                            // Check bounds and uniqueness within the adjusted combination
                             if (adjustedNum < 1 || adjustedNum > 42 || adjustedMainNumbers.Contains(adjustedNum))
                             {
-                                adjustedNum = num - adjustment; // Try the opposite adjustment
+                                adjustedNum = num - adjustment;
                             }
 
                             if (adjustedNum < 1 || adjustedNum > 42 || adjustedMainNumbers.Contains(adjustedNum))
                             {
-                                adjustedNum = num; // If opposite adjustment is also invalid, leave the number as is
+                                adjustedNum = num;
                             }
 
                             adjustedMainNumbers[i] = adjustedNum;
