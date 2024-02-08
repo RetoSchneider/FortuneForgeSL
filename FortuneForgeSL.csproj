@@ -65,6 +65,7 @@
 
 	<ItemGroup>
 	  <None Remove="%24placeholder%24.scale-400.png" />
+	  <None Remove="Resources\Images\window_resize_image.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
