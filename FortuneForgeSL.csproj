@@ -36,6 +36,16 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+		<DefaultLanguage>en</DefaultLanguage>
+		<PackageCertificateThumbprint>3D933CAFFC7027A9643627A4BCB7EC4CE8B9899D</PackageCertificateThumbprint>
+		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+		<GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+		<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+		<GenerateTestArtifacts>True</GenerateTestArtifacts>
+		<AppInstallerUri>E:\Projects_Installers</AppInstallerUri>
+		<HoursBetweenUpdateChecks>168</HoursBetweenUpdateChecks>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -60,12 +70,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="%24placeholder%24.scale-400.png" />
+	  <None Remove="FortuneForgeSLImage.scale-400.png" />
 	  <None Remove="Resources\Images\window_resize_image.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="$placeholder$.scale-400.png" />
+	  <Content Include="FortuneForgeSLImage.scale-400.png" />
 	</ItemGroup>
 
 	<ItemGroup>
