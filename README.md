@@ -2,7 +2,6 @@
 
 Welcome to the initial preview release of the Fortune Forge: Swiss Lotto Edition, a .NET MAUI desktop application designed to enhance your Swiss Lotto experience. This app is tailored to meet the needs of lottery enthusiasts looking for a smart, efficient way to generate lottery numbers that adhere to the Swiss Lotto system's rules. Below are the key features that makes this app a must-have tool for anyone looking to increase their chances of winning the Swiss Lotto.
 
-
 🚀 Features
 
 - Swiss Lotto Number Generator: Utilizes a sophisticated algorithm to generate lottery numbers exclusively for the Swiss Lotto, ensuring compliance with game rules and enhancing your chance to win.
@@ -21,7 +20,7 @@ Welcome to the initial preview release of the Fortune Forge: Swiss Lotto Edition
 
 - Result Display: Enjoy the clarity and ease of viewing your generated number combinations, presented in an organized and readable format for effortless selection and reference.
 
-Dive into the world of the Swiss Lotto with an innovative approach to generating lottery numbers. Whether you're a seasoned lottery player or new to the game, the SwissLotto Combination Generator is designed to offer you a fun, engaging, and potentially rewarding experience. Try it out today and take a step closer to your next big win!
+Dive into the world of the Swiss Lotto with an innovative approach to generating lottery numbers. Whether you're a seasoned lottery player or new to the game, the Fortune Forge: Swiss Lotto Edition is designed to offer you a fun, engaging, and potentially rewarding experience. Try it out today and take a step closer to your next big win!
 
 
 📋 Installation:
